@@ -1,0 +1,130 @@
+programa ejercicio2
+areas
+  AreaJuez: AreaP(1, 1, 1, 1)
+  
+  AreaCVerde: AreaP(5, 1, 5, 49)
+  AreaCAmarillo: AreaP(10, 1, 10, 49)
+  AreaCRosa: AreaP(15, 1, 15, 49)
+  AreaCNegro: AreaP(20, 1, 20, 49)
+
+  {Consideramos peores casos de ultimos para limites}
+  AreaEscaladores: AreaC(5, 51, 55, 66)
+  
+  {Deposito de los ganadores}
+  AreaDeposito: AreaPC(100, 1, 100, 1)
+  
+  {Deposito de los perdedores}
+  AreaRestos: AreaPC(1, 50, 100, 50)
+  
+robots
+  robot rCorredor 
+  variables
+    id, papeles, alto: numero
+  comenzar
+    RecibirMensaje(id, *)
+
+    mientras (posCa < 50)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        papeles:= papeles + 1
+
+      Random(alto, 1, 5)
+      si (PosCa + alto < 50)
+        Pos(PosAv, PosCa + alto)
+      sino
+        Pos(PosAv, 50) {si o si termina en PosCa = 50)
+    
+    {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
+    EnviarMensaje(juez, id)
+    EnviarMensaje(juez, papeles)
+        
+    si (id = 1)
+      EnviarMensaje(corredorVerde, 5)
+    sino
+      si (id = 2)
+        EnviarMensaje(corredorAmarillo, 10)
+      sino
+        si (id = 3)
+          EnviarMensaje(corredorRosa, 15)
+        sino
+          EnviarMensaje(corredorNegro, 20)
+  fin
+  
+  robot rEscalador
+  variables
+    id, av, ancho, flores: numero
+  comenzar {verde = 1, amarillo = 2, rosa = 3, negro = 4}
+    RecibirMensaje(id, juez) {Recibe identificador del juez}
+    {Espera aviso para arrancar su parte}
+    si (id == 1)  
+      RecibirMensaje(av, corredorVerde) 
+    sino
+      si (id == 2)
+        RecibirMensaje(av, corredorAmarillo)
+      sino
+        si (id == 3) 
+          RecibirMensaje(av, corredorRosa)
+        sino
+          RecibirMensaje(av, corredorNegro)
+    
+    {Este fragmento iria dentro del proceso Realizar Escalon)
+    repetir 5 {cte escalones}
+      repetir 3 {Podria ir cte alto}
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          flor:= flor + 1
+        mover
+      derecha
+      Random(ancho, 3, 5)
+      repetir ancho
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          flores:= flores + 1
+        mover
+      repetir 3 {Proceso girar Izquierda}
+        derecha
+    
+    {Comunicar Flores Juntadas}
+    EnviarMensaje(juez, id)
+    EnviarMensaje(juez, flores)
+     
+  fin
+
+
+  robot rJuez 
+  variables
+    
+  comenzar
+    
+  fin
+
+variables
+  corredorVerde: rCorredor 
+  corredorAmarillo: rCorredor 
+  corredorRosa: rCorredor 
+  corredorNegro: rCorredor 
+  escaladorVerde: rEscalador 
+  escaladorAmarillo: rEscalador 
+  escaladorRosa: rEscalador 
+  escaladorNegro: rEscalador
+  juez: rJuez
+
+comenzar 
+  AsignarArea(robot1, Area1)
+  AsignarArea(robot2, Area2)
+  AsignarArea(fiscal, Area3)
+  
+  Iniciar(juez, 1, 1)
+  
+  Iniciar(corredorVerde, 5, 1)
+  Iniciar(corredorAmarillo, 10, 1)
+  Iniciar(corredorRosa, 15, 1)
+  Iniciar(corredorNegro, 20, 1)
+  
+  Iniciar(escaladorVerde, 5, 1)
+  Iniciar(escaladorAmarillo, 10, 1)
+  Iniciar(escaladorRosa, 15, 1)
+  Iniciar(escaladorNegro, 20, 1)
+
+fin
+
