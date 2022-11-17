@@ -1,6 +1,38 @@
 programa ejercicio2
 
 procesos
+  proceso depositarFloresPerdedor(ES flores: numero; E avInicial: numero; E caInicial: numero)
+  comenzar
+    BloquearEsquina(1,50)
+    Pos(1,50)
+    derecha
+    {Bloqueo solo esquina inicial y recorren uno a la vez | Bloqueo esquina a esquina y todos recorren al mismo tiempo}
+    mientras ((flores > 0) && (PosAv < 100))
+      depositarFlor
+      flor := flor - 1
+      mover
+    Informar('Avenida:',PosAv)
+    Pos(avInicial,caInicial)
+    LiberarEsquina(1,50)
+  fin
+  
+  proceso depositarPapelesPerdedor(ES papeles: numero; E avInicial: numero; E caInicial: numero)
+  comenzar
+    BloquearEsquina(1,50)
+    Pos(1,50)
+    derecha
+    {Bloqueo solo esquina inicial y recorren uno a la vez | Bloqueo esquina a esquina y todos recorren al mismo tiempo}
+    mientras ((papeles > 0) && (PosAv < 100))
+      depositarPapel
+      papeles := papeles - 1
+      mover
+    Informar('Avenida:',PosAv)
+    Pos(avInicial,caInicial)
+    LiberarEsquina(1,50)
+  fin
+
+  
+  
   proceso izquierda
   comenzar
     repetir 3
@@ -47,10 +79,13 @@ areas
 robots
   robot rCorredor 
   variables
-    id, papeles, alto: numero
+    id, papeles, alto, avInicial, caInicial: numero
+    ganador: boolean
   comenzar
-    RecibirMensaje(id, *)
-
+    RecibirMensaje(id, juez)
+    avInicial := PosAv
+    caInicial := PosCa
+    
     mientras (posCa < 50)
       mientras (HayPapelEnLaEsquina)
         tomarPapel
@@ -61,11 +96,8 @@ robots
         Pos(PosAv, PosCa + alto)
       sino
         Pos(PosAv, 50) {si o si termina en PosCa = 50)
-    
-    {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
-    EnviarMensaje(juez, id)
-    EnviarMensaje(juez, papeles)
-        
+
+    {Avisa a compa�ero que termino}
     si (id = 1)
       EnviarMensaje(corredorVerde, 5)
     sino
@@ -76,24 +108,52 @@ robots
           EnviarMensaje(corredorRosa, 15)
         sino
           EnviarMensaje(corredorNegro, 20)
+          
+        
+    {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
+    EnviarMensaje(juez, id)
+    EnviarMensaje(juez, papeles)
+    
+    {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
+    RecibirMensaje(ganador, juez)
+    si (ganador)
+      BloquearEsquina(100,1)
+      Pos(100,1)
+      mientras (papeles > 0)
+        depositarPapel
+        papeles := papeles - 1
+      Pos(avInicial,caInicial)
+      LiberarEsquina(100,1) 
+    sino
+      depositarPapelesPerdedor(papeles)
+
+    
+    
+
   fin
   
   robot rEscalador 
   variables
-    id, av, ancho, flores: numero
-  comenzar {verde = 1, amarillo = 2, rosa = 3, negro = 4}
+    id, av, ancho, flores,caInicial,avInicial: numero
+    ganador: boolean
+  comenzar 
+    avInicial := PosAv
+    caInicial := PosCa
+
+    {verde = 1, amarillo = 2, rosa = 3, negro = 4}
     RecibirMensaje(id, juez) {Recibe identificador del juez}
-    {Espera aviso para arrancar su parte}
-    si (id == 1)  
+    si (id == 5)  
       RecibirMensaje(av, corredorVerde) 
     sino
-      si (id == 2)
+      si (id == 6)
         RecibirMensaje(av, corredorAmarillo)
       sino
-        si (id == 3) 
+        si (id == 7) 
           RecibirMensaje(av, corredorRosa)
         sino
           RecibirMensaje(av, corredorNegro)
+          
+    {Recorrido propio de escaladores}
     repetir 5
       realizarEscalon(flores)
        
@@ -101,7 +161,70 @@ robots
     {Comunicar Flores Juntadas}
     EnviarMensaje(juez, id)
     EnviarMensaje(juez, flores)
+    
+    {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
+    RecibirMensaje(ganador, juez)
+    si (ganador)
+      BloquearEsquina(100,1)
+      Pos(100,1)
+      mientras (flores > 0)
+        depositarFlor
+        flores := flores - 1
+      Pos(avInicial,caInicial)
+      LiberarEsquina(100,1)
+      
+    sino
+      depositarFloresPerdedor(flores)
      
+  fin
+  
+  robot rJuez
+  variables
+    maxFlores, maxFloresId, maxPapeles, maxPapelesId, id, flores, papeles: numero
+  comenzar
+  {Envio de identificadores}
+    EnviarMensaje(corredorVerde,1)
+    EnviarMensaje(corredorAmarillo,2)
+    EnviarMensaje(corredorRosa,3)
+    EnviarMensaje(corredorNegro,4)
+    
+    EnviarMensaje(escaladorVerde,5)
+    EnviarMensaje(escaladorAmarillo,6)
+    EnviarMensaje(escaladorRosa,7)
+    EnviarMensaje(escaladorNegro,8)
+    
+    {Procesamiento de flores y papeles)
+    repetir 8
+      RecibirMensaje (id, *)
+      si (id = 1) 
+        RecibirMensaje(papeles, corredorVerde)
+        si (papeles > maxPapeles) 
+          maxPapeles:= papeles
+          maxPapelesId:= id
+      sino 
+        si (id = 2) 
+          RecibirMensaje(papeles, corredorAmarillo)
+          si (papeles > maxPapeles) 
+          maxPapeles:= papeles
+          maxPapelesId:= id
+
+        sino
+          si (id = 3)
+            RecibirMensaje(papeles, corredorRosa)
+            si (papeles > maxPapeles) 
+              maxPapeles:= papeles
+              maxPapelesId:= id
+          sino
+            si (id = 4)
+              RecibirMensaje(papeles, corredorNegro)
+              si (papeles > maxPapeles) 
+                maxPapeles:= papeles
+                maxPapelesId:= id
+
+
+
+    
+
   fin
 
 
@@ -133,4 +256,3 @@ comenzar
   Iniciar(escaladorNegro, 20, 1)
 
 fin
-
