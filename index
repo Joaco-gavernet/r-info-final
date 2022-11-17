@@ -9,9 +9,9 @@ procesos
     {Bloqueo solo esquina inicial y recorren uno a la vez | Bloqueo esquina a esquina y todos recorren al mismo tiempo}
     mientras ((flores > 0) && (PosAv < 100))
       depositarFlor
-      flor := flor - 1
+      flores := flores - 1
       mover
-    Informar('Avenida:',PosAv)
+    Informar('Avenida',PosAv)
     Pos(avInicial,caInicial)
     LiberarEsquina(1,50)
   fin
@@ -26,7 +26,7 @@ procesos
       depositarPapel
       papeles := papeles - 1
       mover
-    Informar('Avenida:',PosAv)
+    Informar('Avenida',PosAv)
     Pos(avInicial,caInicial)
     LiberarEsquina(1,50)
   fin
@@ -47,10 +47,11 @@ procesos
     repetir alto
       mientras (HayFlorEnLaEsquina)
         tomarFlor
-        flor:= flor + 1
+        flores:= flores + 1
       mover
     derecha
-    Random(ancho, 3, 5)
+    {Random(ancho, 3, 5)}
+    ancho:= 3
     repetir ancho
       mientras (HayFlorEnLaEsquina)
         tomarFlor
@@ -58,6 +59,9 @@ procesos
       mover
     izquierda
   fin
+
+
+
 
 areas
   AreaJuez: AreaP(1, 1, 1, 1)
@@ -86,7 +90,7 @@ robots
     avInicial := PosAv
     caInicial := PosCa
     
-    mientras (posCa < 50)
+    mientras (PosCa < 49)
       mientras (HayPapelEnLaEsquina)
         tomarPapel
         papeles:= papeles + 1
@@ -95,24 +99,25 @@ robots
       si ((PosCa + alto) < 50)
         Pos(PosAv, PosCa + alto)
       sino
-        Pos(PosAv, 50) {si o si termina en PosCa = 50)
+        Pos(PosAv, 49) {si o si termina en PosCa = 50)
 
-    {Avisa a compa�ero que termino}
+    {Avisa a compa que termino}
     si (id = 1)
-      EnviarMensaje(corredorVerde, 5)
+      Informar('Hola',1)
+      EnviarMensaje(5,escaladorVerde)
     sino
       si (id = 2)
-        EnviarMensaje(corredorAmarillo, 10)
+        EnviarMensaje(10,escaladorAmarillo)
       sino
         si (id = 3)
-          EnviarMensaje(corredorRosa, 15)
+          EnviarMensaje(15,escaladorRosa)
         sino
-          EnviarMensaje(corredorNegro, 20)
+          EnviarMensaje(20,escaladorNegro)
           
         
     {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
-    EnviarMensaje(juez, id)
-    EnviarMensaje(juez, papeles)
+    EnviarMensaje(id, juez)
+    EnviarMensaje(papeles, juez)
     
     {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
     RecibirMensaje(ganador, juez)
@@ -125,7 +130,7 @@ robots
       Pos(avInicial,caInicial)
       LiberarEsquina(100,1) 
     sino
-      depositarPapelesPerdedor(papeles)
+      depositarPapelesPerdedor(papeles,avInicial,caInicial)
 
     
     
@@ -142,25 +147,24 @@ robots
 
     {verde = 1, amarillo = 2, rosa = 3, negro = 4}
     RecibirMensaje(id, juez) {Recibe identificador del juez}
-    si (id == 5)  
+    si (id = 5)  
       RecibirMensaje(av, corredorVerde) 
     sino
-      si (id == 6)
+      si (id = 6)
         RecibirMensaje(av, corredorAmarillo)
       sino
-        si (id == 7) 
+        si (id = 7) 
           RecibirMensaje(av, corredorRosa)
         sino
-          RecibirMensaje(av, corredorNegro)
-          
+          RecibirMensaje(av, corredorNegro)     
     {Recorrido propio de escaladores}
     repetir 5
       realizarEscalon(flores)
        
     
     {Comunicar Flores Juntadas}
-    EnviarMensaje(juez, id)
-    EnviarMensaje(juez, flores)
+    EnviarMensaje(id, juez)
+    EnviarMensaje(flores, juez)
     
     {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
     RecibirMensaje(ganador, juez)
@@ -174,7 +178,7 @@ robots
       LiberarEsquina(100,1)
       
     sino
-      depositarFloresPerdedor(flores)
+      depositarFloresPerdedor(flores,avInicial,caInicial)
      
   fin
   
@@ -183,18 +187,18 @@ robots
     maxFlores, maxFloresId, maxPapeles, maxPapelesId, id, flores, papeles: numero
   comenzar
   {Envio de identificadores}
-    EnviarMensaje(corredorVerde,1)
-    EnviarMensaje(corredorAmarillo,2)
-    EnviarMensaje(corredorRosa,3)
-    EnviarMensaje(corredorNegro,4)
+    EnviarMensaje(1, corredorVerde)
+    EnviarMensaje(2, corredorAmarillo)
+    EnviarMensaje(3, corredorRosa)
+    EnviarMensaje(4, corredorNegro)
     
-    EnviarMensaje(escaladorVerde,5)
-    EnviarMensaje(escaladorAmarillo,6)
-    EnviarMensaje(escaladorRosa,7)
-    EnviarMensaje(escaladorNegro,8)
+    EnviarMensaje(5, escaladorVerde)
+    EnviarMensaje(6, escaladorAmarillo)
+    EnviarMensaje(7, escaladorRosa)
+    EnviarMensaje(8, escaladorNegro)
     
-    {Procesamiento de flores y papeles)
-    repetir 8
+    {Procesamiento de flores y papeles}
+    repetir 8 
       RecibirMensaje (id, *)
       si (id = 1) 
         RecibirMensaje(papeles, corredorVerde)
@@ -205,8 +209,8 @@ robots
         si (id = 2) 
           RecibirMensaje(papeles, corredorAmarillo)
           si (papeles > maxPapeles) 
-          maxPapeles:= papeles
-          maxPapelesId:= id
+            maxPapeles:= papeles
+            maxPapelesId:= id
 
         sino
           si (id = 3)
@@ -220,12 +224,47 @@ robots
               si (papeles > maxPapeles) 
                 maxPapeles:= papeles
                 maxPapelesId:= id
-
-
+            sino
+              si (id = 5)
+                RecibirMensaje(flores, escaladorVerde)
+                si (flores > maxFlores)
+                  maxFlores := flores
+                  maxFloresId := id
+                sino
+                  si (id = 6)
+                    RecibirMensaje(flores, escaladorAmarillo)
+                    si (flores > maxFlores)
+                      maxFlores := flores
+                      maxFloresId := id
+                    sino
+                      si (id = 7)
+                        RecibirMensaje(flores, escaladorRosa)
+                        si (flores > maxFlores)
+                          maxFlores := flores
+                          maxFloresId := id
+                        sino
+                          si (id = 8)
+                            RecibirMensaje(flores, escaladorNegro)
+                            si (flores > maxFlores)
+                              maxFlores := flores
+                              maxFloresId := id
+    {Logica de ganadores}
+    Informar('Hola',100)
+    EnviarMensaje(V, corredorVerde)
+    EnviarMensaje(F, corredorAmarillo)
+    EnviarMensaje(F, corredorRosa)
+    EnviarMensaje(F, corredorNegro)
+    
+    EnviarMensaje(V, escaladorVerde)
+    EnviarMensaje(F, escaladorAmarillo)
+    EnviarMensaje(F, escaladorRosa)
+    EnviarMensaje(F, escaladorNegro)
 
     
+    
 
-  fin
+     
+  fin 
 
 
 
@@ -239,20 +278,66 @@ variables
   escaladorAmarillo: rEscalador 
   escaladorRosa: rEscalador 
   escaladorNegro: rEscalador
-  {juez: rJuez}
+  juez: rJuez
   
 comenzar 
+  AsignarArea(juez, AreaJuez)
 
-  {Iniciar(juez, 1, 1)}
+  AsignarArea(corredorVerde, AreaCVerde)
+  AsignarArea(corredorAmarillo, AreaCAmarillo)
+  AsignarArea(corredorRosa, AreaCRosa)
+  AsignarArea(corredorNegro, AreaCNegro)
+
+  AsignarArea(escaladorVerde, AreaEscaladores)
+  AsignarArea(escaladorAmarillo, AreaEscaladores)
+  AsignarArea(escaladorRosa, AreaEscaladores)
+  AsignarArea(escaladorNegro, AreaEscaladores)
+
+  AsignarArea(corredorVerde, AreaRestos)
+  AsignarArea(corredorAmarillo, AreaRestos)
+  AsignarArea(corredorRosa, AreaRestos)
+  AsignarArea(corredorNegro, AreaRestos)
+
+  AsignarArea(escaladorVerde, AreaRestos)
+  AsignarArea(escaladorAmarillo, AreaRestos)
+  AsignarArea(escaladorRosa, AreaRestos)
+  AsignarArea(escaladorNegro, AreaRestos)
+
+  AsignarArea(corredorVerde, AreaDeposito)
+  AsignarArea(corredorAmarillo, AreaDeposito)
+  AsignarArea(corredorRosa, AreaDeposito)
+  AsignarArea(corredorNegro, AreaDeposito)
+
+  AsignarArea(escaladorVerde, AreaDeposito)
+  AsignarArea(escaladorAmarillo, AreaDeposito)
+  AsignarArea(escaladorRosa, AreaDeposito)
+  AsignarArea(escaladorNegro, AreaDeposito)
+
+  
+  Iniciar(juez, 1, 1) 
   
   Iniciar(corredorVerde, 5, 1)
   Iniciar(corredorAmarillo, 10, 1)
   Iniciar(corredorRosa, 15, 1)
   Iniciar(corredorNegro, 20, 1)
   
-  Iniciar(escaladorVerde, 5, 1)
-  Iniciar(escaladorAmarillo, 10, 1)
-  Iniciar(escaladorRosa, 15, 1)
-  Iniciar(escaladorNegro, 20, 1)
+  Iniciar(escaladorVerde, 5, 51)
+  Iniciar(escaladorAmarillo, 10, 51)
+  Iniciar(escaladorRosa, 15, 51)
+  Iniciar(escaladorNegro, 20, 51)
 
 fin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
