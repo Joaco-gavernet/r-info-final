@@ -109,15 +109,15 @@ robots
 
     {Avisa a compa que termino}
     si (id = 1)
-      EnviarMensaje(5,escaladorVerde)
+      EnviarMensaje(V,escaladorVerde)
     sino
       si (id = 2)
-        EnviarMensaje(10,escaladorAmarillo)
+        EnviarMensaje(V,escaladorAmarillo)
       sino
         si (id = 3)
-          EnviarMensaje(15,escaladorRosa)
+          EnviarMensaje(V,escaladorRosa)
         sino
-          EnviarMensaje(20,escaladorNegro)
+          EnviarMensaje(V,escaladorNegro)
           
     {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
     EnviarMensaje(id, juez)
@@ -139,8 +139,8 @@ robots
   
   robot rEscalador 
   variables
-    id, av, ancho, flores,caInicial,avInicial: numero
-    ganador: boolean
+    id, ancho, flores,caInicial,avInicial: numero
+    ganador,habilitado: boolean
   comenzar 
     avInicial := PosAv
     caInicial := PosCa
@@ -148,15 +148,15 @@ robots
     {verde = 1, amarillo = 2, rosa = 3, negro = 4}
     RecibirMensaje(id, juez) {Recibe identificador del juez}
     si (id = 5)  
-      RecibirMensaje(av, corredorVerde) 
+      RecibirMensaje(habilitado, corredorVerde) 
     sino
       si (id = 6)
-        RecibirMensaje(av, corredorAmarillo)
+        RecibirMensaje(habilitado, corredorAmarillo)
       sino
         si (id = 7) 
-          RecibirMensaje(av, corredorRosa)
+          RecibirMensaje(habilitado, corredorRosa)
         sino
-          RecibirMensaje(av, corredorNegro)     
+          RecibirMensaje(habilitado, corredorNegro)     
     {Recorrido propio de escaladores}
     repetir 5
       
