@@ -50,16 +50,17 @@ procesos
       BloquearEsquina(PosAv, PosCa + 1)
       mover
       LiberarEsquina(PosAv, PosCa - 1)
+    
     derecha
     
-    Random(ancho, 3, 5)
+    Random(ancho,3,5)
     repetir ancho
       mientras (HayFlorEnLaEsquina)
         tomarFlor
         flores:= flores + 1
       BloquearEsquina(PosAv + 1, PosCa)
       mover
-      BloquearEsquina(PosAv - 1, PosCa)
+      LiberarEsquina(PosAv - 1, PosCa)
       
     izquierda
   fin
