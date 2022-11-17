@@ -251,23 +251,52 @@ robots
                               maxFlores := flores
                               maxFloresId := id
     {Logica de ganadores}
-    EnviarMensaje(V, corredorVerde)
-    EnviarMensaje(F, corredorAmarillo)
-    EnviarMensaje(F, corredorRosa)
-    EnviarMensaje(F, corredorNegro)
-    
-    EnviarMensaje(V, escaladorVerde)
-    EnviarMensaje(F, escaladorAmarillo)
-    EnviarMensaje(F, escaladorRosa)
-    EnviarMensaje(F, escaladorNegro)
+    si (maxPapelesId = 1)
+      EnviarMensaje(V, corredorVerde)
+      EnviarMensaje(F, corredorAmarillo)
+      EnviarMensaje(F, corredorRosa)
+      EnviarMensaje(F, corredorNegro)
+    sino
+      si (maxPapelesId = 2)
+        EnviarMensaje(F, corredorVerde)
+        EnviarMensaje(V, corredorAmarillo)
+        EnviarMensaje(F, corredorRosa)
+        EnviarMensaje(F, corredorNegro)
+      sino
+        si (maxPapelesId = 3)
+          EnviarMensaje(F, corredorVerde)
+          EnviarMensaje(F, corredorAmarillo)
+          EnviarMensaje(V, corredorRosa)
+          EnviarMensaje(F, corredorNegro)
+        sino
+          EnviarMensaje(F, corredorVerde)
+          EnviarMensaje(F, corredorAmarillo)
+          EnviarMensaje(F, corredorRosa)
+          EnviarMensaje(V, corredorNegro)
 
-    
-    
-
-     
+    si (maxFloresId = 1)
+      EnviarMensaje(V, escaladorVerde)
+      EnviarMensaje(F, escaladorAmarillo)
+      EnviarMensaje(F, escaladorRosa)
+      EnviarMensaje(F, escaladorNegro)
+    sino
+      si (maxFloresId = 2)
+        EnviarMensaje(F, escaladorVerde)
+        EnviarMensaje(V, escaladorAmarillo)
+        EnviarMensaje(F, escaladorRosa)
+        EnviarMensaje(F, escaladorNegro)
+      sino
+        si (maxFloresId = 3)
+          EnviarMensaje(F, escaladorVerde)
+          EnviarMensaje(F, escaladorAmarillo)
+          EnviarMensaje(V, escaladorRosa)
+          EnviarMensaje(F, escaladorNegro)
+        sino
+          EnviarMensaje(F, escaladorVerde)
+          EnviarMensaje(F, escaladorAmarillo)
+          EnviarMensaje(F, escaladorRosa)
+          EnviarMensaje(V, escaladorNegro) 
   fin 
-
-
 
 
 variables
