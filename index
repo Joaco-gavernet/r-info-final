@@ -6,8 +6,8 @@ procesos
     BloquearEsquina(1,50)
     Pos(1,50)
     derecha
-    {Bloqueo solo esquina inicial y recorren uno a la vez | Bloqueo esquina a esquina y todos recorren al mismo tiempo}
-    mientras ((flores > 0) && (PosAv < 100))
+
+    mientras ((flores > 0) & (PosAv < 100))
       depositarFlor
       flores := flores - 1
       mover
@@ -21,8 +21,8 @@ procesos
     BloquearEsquina(1,50)
     Pos(1,50)
     derecha
-    {Bloqueo solo esquina inicial y recorren uno a la vez | Bloqueo esquina a esquina y todos recorren al mismo tiempo}
-    mientras ((papeles > 0) && (PosAv < 100))
+
+    mientras ((papeles > 0) & (PosAv < 100))
       depositarPapel
       papeles := papeles - 1
       mover
@@ -31,8 +31,6 @@ procesos
     LiberarEsquina(1,50)
   fin
 
-  
-  
   proceso izquierda
   comenzar
     repetir 3
@@ -44,23 +42,27 @@ procesos
     alto, ancho: numero
   comenzar
     alto:= 3
+
     repetir alto
       mientras (HayFlorEnLaEsquina)
         tomarFlor
         flores:= flores + 1
+      BloquearEsquina(PosAv, PosCa + 1)
       mover
+      LiberarEsquina(PosAv, PosCa - 1)
     derecha
-    {Random(ancho, 3, 5)}
-    ancho:= 3
+    
+    Random(ancho, 3, 5)
     repetir ancho
       mientras (HayFlorEnLaEsquina)
         tomarFlor
         flores:= flores + 1
+      BloquearEsquina(PosAv + 1, PosCa)
       mover
+      BloquearEsquina(PosAv - 1, PosCa)
+      
     izquierda
   fin
-
-
 
 
 areas
@@ -84,13 +86,14 @@ robots
   robot rCorredor 
   variables
     id, papeles, alto, avInicial, caInicial: numero
-    ganador: boolean
+    ganador, corteWhile: boolean
   comenzar
     RecibirMensaje(id, juez)
-    avInicial := PosAv
-    caInicial := PosCa
+    avInicial:= PosAv
+    caInicial:= PosCa
+    corteWhile:= V
     
-    mientras (PosCa < 49)
+    mientras ((PosCa < 50) & (corteWhile))
       mientras (HayPapelEnLaEsquina)
         tomarPapel
         papeles:= papeles + 1
@@ -99,11 +102,12 @@ robots
       si ((PosCa + alto) < 50)
         Pos(PosAv, PosCa + alto)
       sino
-        Pos(PosAv, 49) {si o si termina en PosCa = 50)
+        corteWhile:= F
+      
+    Pos(avInicial,caInicial) {solucion para que no se choquen en la calle 50}
 
     {Avisa a compa que termino}
     si (id = 1)
-      Informar('Hola',1)
       EnviarMensaje(5,escaladorVerde)
     sino
       si (id = 2)
@@ -114,7 +118,6 @@ robots
         sino
           EnviarMensaje(20,escaladorNegro)
           
-        
     {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
     EnviarMensaje(id, juez)
     EnviarMensaje(papeles, juez)
@@ -131,10 +134,6 @@ robots
       LiberarEsquina(100,1) 
     sino
       depositarPapelesPerdedor(papeles,avInicial,caInicial)
-
-    
-    
-
   fin
   
   robot rEscalador 
@@ -159,8 +158,10 @@ robots
           RecibirMensaje(av, corredorNegro)     
     {Recorrido propio de escaladores}
     repetir 5
+      
       realizarEscalon(flores)
        
+    Pos(avInicial,caInicial)
     
     {Comunicar Flores Juntadas}
     EnviarMensaje(id, juez)
@@ -249,7 +250,6 @@ robots
                               maxFlores := flores
                               maxFloresId := id
     {Logica de ganadores}
-    Informar('Hola',100)
     EnviarMensaje(V, corredorVerde)
     EnviarMensaje(F, corredorAmarillo)
     EnviarMensaje(F, corredorRosa)
@@ -327,17 +327,3 @@ comenzar
   Iniciar(escaladorNegro, 20, 51)
 
 fin
-
-
-
-
-
-
-
-
-
-
-
-
-
-
