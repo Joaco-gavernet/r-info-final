@@ -16,6 +16,28 @@ procesos
     LiberarEsquina(1,50)
   fin
   
+  proceso depositarFloresPerdedorV2(ES flores: numero; E avInicial: numero; E caInicial: numero)
+  variables
+    avUlt,caUlt: numero
+  comenzar
+    BloquearEsquina(1,50)
+    Pos(1,50)
+    derecha
+    
+    mientras ((flores > 0) & (PosAv < 100))
+      BloquearEsquina(PosAv + 1,PosCa)
+      depositarFlor
+      flores:= flores - 1
+      mover
+      LiberarEsquina(PosAv - 1,PosCa)
+    avUlt:= PosAv
+    caUlt:= PosCa
+    Informar('Avenida', PosAv)
+    Pos(avInicial,caInicial)
+    LiberarEsquina(avUlt,caUlt)
+  fin
+  
+  
   proceso depositarPapelesPerdedor(ES papeles: numero; E avInicial: numero; E caInicial: numero)
   comenzar
     BloquearEsquina(1,50)
@@ -37,6 +59,28 @@ procesos
       derecha
   fin
   
+  proceso depositarPapelesPerdedorV2(ES papeles: numero; E avInicial: numero; E caInicial: numero)
+  variables
+    avUlt,caUlt: numero
+  comenzar
+    BloquearEsquina(1,50)
+    Pos(1,50)
+    derecha
+    
+    mientras ((papeles > 0) & (PosAv < 100))
+      BloquearEsquina(PosAv + 1,PosCa)
+      depositarPapel
+      papeles:= papeles - 1
+      mover
+      LiberarEsquina(PosAv - 1,PosCa)
+    avUlt:= PosAv
+    caUlt:= PosCa
+    Informar('Avenida', PosAv)
+    Pos(avInicial,caInicial)
+    LiberarEsquina(avUlt,caUlt)
+  fin
+
+  
   proceso realizarEscalon(ES flores: numero)
   variables
     alto, ancho: numero
@@ -44,9 +88,7 @@ procesos
     alto:= 3
 
     repetir alto
-      mientras (HayFlorEnLaEsquina)
-        tomarFlor
-        flores:= flores + 1
+      juntarFlores(flores)
       BloquearEsquina(PosAv, PosCa + 1)
       mover
       LiberarEsquina(PosAv, PosCa - 1)
@@ -55,15 +97,28 @@ procesos
     
     Random(ancho,3,5)
     repetir ancho
-      mientras (HayFlorEnLaEsquina)
-        tomarFlor
-        flores:= flores + 1
+      juntarFlores(flores)
       BloquearEsquina(PosAv + 1, PosCa)
       mover
       LiberarEsquina(PosAv - 1, PosCa)
       
     izquierda
   fin
+  
+  proceso juntarFlores(ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso juntarPapeles(ES papeles: numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  
 
 
 areas
@@ -95,10 +150,7 @@ robots
     corteWhile:= V
     
     mientras ((PosCa < 50) & (corteWhile))
-      mientras (HayPapelEnLaEsquina)
-        tomarPapel
-        papeles:= papeles + 1
-
+      juntarPapeles(papeles)
       Random(alto, 1, 5)
       si ((PosCa + alto) < 50)
         Pos(PosAv, PosCa + alto)
@@ -134,7 +186,7 @@ robots
       Pos(avInicial,caInicial)
       LiberarEsquina(100,1) 
     sino
-      depositarPapelesPerdedor(papeles,avInicial,caInicial)
+      depositarPapelesPerdedorV2(papeles,avInicial,caInicial)
   fin
   
   robot rEscalador 
@@ -180,7 +232,7 @@ robots
       LiberarEsquina(100,1)
       
     sino
-      depositarFloresPerdedor(flores,avInicial,caInicial)
+      depositarFloresPerdedorV2(flores,avInicial,caInicial)
      
   fin
   
@@ -357,3 +409,4 @@ comenzar
   Iniciar(escaladorNegro, 20, 51)
 
 fin
+
