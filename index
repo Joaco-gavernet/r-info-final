@@ -1,22 +1,8 @@
 programa ejercicio2
 
 procesos
-  proceso depositarFloresPerdedor(ES flores: numero; E avInicial: numero; E caInicial: numero)
-  comenzar
-    BloquearEsquina(1, 50)
-    Pos(1, 50)
-    derecha
-
-    mientras ((flores > 0) & (PosAv < 100))
-      depositarFlor
-      flores:= flores - 1
-      mover
-    Informar('Avenida',PosAv)
-    Pos(avInicial, caInicial)
-    LiberarEsquina(1, 50)
-  fin
   
-  proceso depositarFloresPerdedorV2(ES flores: numero; E avInicial: numero; E caInicial: numero)
+  proceso depositarFloresPerdedor(ES flores: numero; E avInicial: numero; E caInicial: numero)
   variables
     avUlt,caUlt: numero
   comenzar
@@ -37,29 +23,7 @@ procesos
     LiberarEsquina(avUlt, caUlt)
   fin
   
-  
   proceso depositarPapelesPerdedor(ES papeles: numero; E avInicial: numero; E caInicial: numero)
-  comenzar
-    BloquearEsquina(1, 50)
-    Pos(1, 50)
-    derecha
-
-    mientras ((papeles > 0) & (PosAv < 100))
-      depositarPapel
-      papeles:= papeles - 1
-      mover
-    Informar('Avenida',PosAv)
-    Pos(avInicial, caInicial)
-    LiberarEsquina(1, 50)
-  fin
-
-  proceso izquierda
-  comenzar
-    repetir 3
-      derecha
-  fin
-  
-  proceso depositarPapelesPerdedorV2(ES papeles: numero; E avInicial: numero; E caInicial: numero)
   variables
     avUlt,caUlt: numero
   comenzar
@@ -79,6 +43,15 @@ procesos
     Pos(avInicial, caInicial)
     LiberarEsquina(avUlt, caUlt)
   fin
+  
+
+
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  
 
   
   proceso realizarEscalon(ES flores: numero; ES avUlt: numero; ES caUlt: numero)
@@ -188,7 +161,7 @@ robots
       Pos(avInicial, caInicial)
       LiberarEsquina(100, 1) 
     sino
-      depositarPapelesPerdedorV2(papeles, avInicial, caInicial)
+      depositarPapelesPerdedor(papeles, avInicial, caInicial)
   fin
   
   robot rEscalador 
@@ -236,7 +209,7 @@ robots
       LiberarEsquina(100, 1)
       
     sino
-      depositarFloresPerdedorV2(flores, avInicial, caInicial)
+      depositarFloresPerdedor(flores, avInicial, caInicial)
      
   fin
   
