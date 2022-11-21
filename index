@@ -137,7 +137,7 @@ areas
   AreaDeposito: AreaPC(100, 1, 100, 1)
   
   {Deposito de los perdedores}
-  AreaRestos: AreaPC(1, 50, 100, 50)
+  AreaRestos: AreaC(1, 50, 100, 50)
   
 robots
   robot rCorredor 
