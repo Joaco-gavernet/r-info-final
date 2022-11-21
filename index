@@ -145,6 +145,7 @@ robots
     id, papeles, alto, avInicial, caInicial: numero
     ganador, corteWhile: boolean
   comenzar
+    {Etapa 1: Recepcion de identificadores y recorrido propio de los corredores}
     RecibirMensaje(id, juez)
     avInicial:= PosAv
     caInicial:= PosCa
@@ -157,10 +158,10 @@ robots
         Pos(PosAv, PosCa + alto)
       sino
         corteWhile:= F
-      
     Pos(avInicial,caInicial) {solucion para que no se choquen en la calle 50}
-
-    {Avisa a compa que termino}
+    
+    
+    {Etapa 2: Pasaje de postas por parte de los corredores para cada uno de sus analogos y envio de papeles juntados al juez}
     si (id = 1)
       EnviarMensaje(V,escaladorVerde)
     sino
@@ -172,11 +173,11 @@ robots
         sino
           EnviarMensaje(V,escaladorNegro)
           
-    {ENVIO DE MENSAJES DESDE LA ESQUINA 50}
     EnviarMensaje(id, juez)
     EnviarMensaje(papeles, juez)
     
-    {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
+    
+    {Etapa 3: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
       BloquearEsquina(100,1)
