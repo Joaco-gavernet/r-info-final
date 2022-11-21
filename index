@@ -3,54 +3,54 @@ programa ejercicio2
 procesos
   proceso depositarFloresPerdedor(ES flores: numero; E avInicial: numero; E caInicial: numero)
   comenzar
-    BloquearEsquina(1,50)
-    Pos(1,50)
+    BloquearEsquina(1, 50)
+    Pos(1, 50)
     derecha
 
     mientras ((flores > 0) & (PosAv < 100))
       depositarFlor
-      flores := flores - 1
+      flores:= flores - 1
       mover
     Informar('Avenida',PosAv)
-    Pos(avInicial,caInicial)
-    LiberarEsquina(1,50)
+    Pos(avInicial, caInicial)
+    LiberarEsquina(1, 50)
   fin
   
   proceso depositarFloresPerdedorV2(ES flores: numero; E avInicial: numero; E caInicial: numero)
   variables
     avUlt,caUlt: numero
   comenzar
-    BloquearEsquina(1,50)
-    Pos(1,50)
+    BloquearEsquina(1, 50)
+    Pos(1, 50)
     derecha
     
     mientras ((flores > 0) & (PosAv < 100))
-      BloquearEsquina(PosAv + 1,PosCa)
+      BloquearEsquina(PosAv + 1, PosCa)
       depositarFlor
       flores:= flores - 1
       mover
-      LiberarEsquina(PosAv - 1,PosCa)
+      LiberarEsquina(PosAv - 1, PosCa)
     avUlt:= PosAv
     caUlt:= PosCa
     Informar('Avenida', PosAv)
-    Pos(avInicial,caInicial)
-    LiberarEsquina(avUlt,caUlt)
+    Pos(avInicial, caInicial)
+    LiberarEsquina(avUlt, caUlt)
   fin
   
   
   proceso depositarPapelesPerdedor(ES papeles: numero; E avInicial: numero; E caInicial: numero)
   comenzar
-    BloquearEsquina(1,50)
-    Pos(1,50)
+    BloquearEsquina(1, 50)
+    Pos(1, 50)
     derecha
 
     mientras ((papeles > 0) & (PosAv < 100))
       depositarPapel
-      papeles := papeles - 1
+      papeles:= papeles - 1
       mover
     Informar('Avenida',PosAv)
-    Pos(avInicial,caInicial)
-    LiberarEsquina(1,50)
+    Pos(avInicial, caInicial)
+    LiberarEsquina(1, 50)
   fin
 
   proceso izquierda
@@ -63,21 +63,21 @@ procesos
   variables
     avUlt,caUlt: numero
   comenzar
-    BloquearEsquina(1,50)
-    Pos(1,50)
+    BloquearEsquina(1, 50)
+    Pos(1, 50)
     derecha
     
     mientras ((papeles > 0) & (PosAv < 100))
-      BloquearEsquina(PosAv + 1,PosCa)
+      BloquearEsquina(PosAv + 1, PosCa)
       depositarPapel
       papeles:= papeles - 1
       mover
-      LiberarEsquina(PosAv - 1,PosCa)
+      LiberarEsquina(PosAv - 1, PosCa)
     avUlt:= PosAv
     caUlt:= PosCa
-    Informar('Avenida', PosAv)
-    Pos(avInicial,caInicial)
-    LiberarEsquina(avUlt,caUlt)
+    Informar('Avenida',PosAv)
+    Pos(avInicial, caInicial)
+    LiberarEsquina(avUlt, caUlt)
   fin
 
   
@@ -158,20 +158,20 @@ robots
         Pos(PosAv, PosCa + alto)
       sino
         corteWhile:= F
-    Pos(avInicial,caInicial) {solucion para que no se choquen en la calle 50}
+    Pos(avInicial, caInicial) {solucion para que no se choquen en la calle 50}
     
     
     {Etapa 2: Pasaje de postas por parte de los corredores para cada uno de sus analogos y envio de papeles juntados al juez}
     si (id = 1)
-      EnviarMensaje(V,escaladorVerde)
+      EnviarMensaje(V, escaladorVerde)
     sino
       si (id = 2)
-        EnviarMensaje(V,escaladorAmarillo)
+        EnviarMensaje(V, escaladorAmarillo)
       sino
         si (id = 3)
-          EnviarMensaje(V,escaladorRosa)
+          EnviarMensaje(V, escaladorRosa)
         sino
-          EnviarMensaje(V,escaladorNegro)
+          EnviarMensaje(V, escaladorNegro)
           
     EnviarMensaje(id, juez)
     EnviarMensaje(papeles, juez)
@@ -180,25 +180,25 @@ robots
     {Etapa 3: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
-      BloquearEsquina(100,1)
-      Pos(100,1)
+      BloquearEsquina(100, 1)
+      Pos(100, 1)
       mientras (papeles > 0)
         depositarPapel
-        papeles := papeles - 1
-      Pos(avInicial,caInicial)
-      LiberarEsquina(100,1) 
+        papeles:= papeles - 1
+      Pos(avInicial, caInicial)
+      LiberarEsquina(100, 1) 
     sino
-      depositarPapelesPerdedorV2(papeles,avInicial,caInicial)
+      depositarPapelesPerdedorV2(papeles, avInicial, caInicial)
   fin
   
   robot rEscalador 
   variables
-    id, ancho, flores,caInicial,avInicial,avUlt,caUlt: numero
-    ganador,habilitado: boolean
+    id, ancho, flores, caInicial, avInicial, avUlt, caUlt: numero
+    ganador, habilitado: boolean
   comenzar
     {Etapa 1: Recibe identificador del juez y espera a recibir la posta de su corredor analogo}
-    avInicial := PosAv
-    caInicial := PosCa
+    avInicial:= PosAv
+    caInicial:= PosCa
     RecibirMensaje(id, juez) 
     si (id = 5)  
       RecibirMensaje(habilitado, corredorVerde) 
@@ -214,9 +214,9 @@ robots
     
     {Etapa 2: Recorrido propio de los escaladores}
     repetir 5
-      realizarEscalon(flores,avUlt,caUlt)
-    LiberarEsquina(avUlt,caUlt) {Liberamos ultima esquina de cada escalador} 
-    Pos(avInicial,caInicial)
+      realizarEscalon(flores, avUlt, caUlt)
+    LiberarEsquina(avUlt, caUlt) {Liberamos ultima esquina de cada escalador} 
+    Pos(avInicial, caInicial)
     
     
     {Etapa 3: Envio de flores juntadas al juez}
@@ -227,16 +227,16 @@ robots
     {Etapa 4: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
-      BloquearEsquina(100,1)
-      Pos(100,1)
+      BloquearEsquina(100, 1)
+      Pos(100, 1)
       mientras (flores > 0)
         depositarFlor
-        flores := flores - 1
-      Pos(avInicial,caInicial)
-      LiberarEsquina(100,1)
+        flores:= flores - 1
+      Pos(avInicial, caInicial)
+      LiberarEsquina(100, 1)
       
     sino
-      depositarFloresPerdedorV2(flores,avInicial,caInicial)
+      depositarFloresPerdedorV2(flores, avInicial, caInicial)
      
   fin
   
