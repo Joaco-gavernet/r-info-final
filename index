@@ -195,12 +195,11 @@ robots
   variables
     id, ancho, flores,caInicial,avInicial,avUlt,caUlt: numero
     ganador,habilitado: boolean
-  comenzar 
+  comenzar
+    {Etapa 1: Recibe identificador del juez y espera a recibir la posta de su corredor analogo}
     avInicial := PosAv
     caInicial := PosCa
-
-    {verde = 1, amarillo = 2, rosa = 3, negro = 4}
-    RecibirMensaje(id, juez) {Recibe identificador del juez}
+    RecibirMensaje(id, juez) 
     si (id = 5)  
       RecibirMensaje(habilitado, corredorVerde) 
     sino
@@ -210,19 +209,22 @@ robots
         si (id = 7) 
           RecibirMensaje(habilitado, corredorRosa)
         sino
-          RecibirMensaje(habilitado, corredorNegro)     
-    {Recorrido propio de escaladores}
+          RecibirMensaje(habilitado, corredorNegro)   
+          
+    
+    {Etapa 2: Recorrido propio de los escaladores}
     repetir 5
       realizarEscalon(flores,avUlt,caUlt)
-    LiberarEsquina(avUlt,caUlt) {Liberamos ultima esquina de cada escalador}
-       
+    LiberarEsquina(avUlt,caUlt) {Liberamos ultima esquina de cada escalador} 
     Pos(avInicial,caInicial)
     
-    {Comunicar Flores Juntadas}
+    
+    {Etapa 3: Envio de flores juntadas al juez}
     EnviarMensaje(id, juez)
     EnviarMensaje(flores, juez)
     
-    {Juez retorna un boolean, V = proceso de ganador, F = proceso de perdedor}
+    
+    {Etapa 4: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
       BloquearEsquina(100,1)
