@@ -241,7 +241,7 @@ robots
   variables
     maxFlores, maxFloresId, maxPapeles, maxPapelesId, id, flores, papeles: numero
   comenzar
-  {Envio de identificadores}
+   {Etapa 1: Envio de identificadores a los robots}
     EnviarMensaje(1, corredorVerde)
     EnviarMensaje(2, corredorAmarillo)
     EnviarMensaje(3, corredorRosa)
@@ -252,7 +252,7 @@ robots
     EnviarMensaje(7, escaladorRosa)
     EnviarMensaje(8, escaladorNegro)
     
-    {Procesamiento de flores y papeles}
+    {Etapa 2: Procesamiento de flores(escaladores) y papeles(corredores) para determinar ganadores y perdedores}
     repetir 8 
       RecibirMensaje (id, *)
       si (id = 1) 
@@ -303,7 +303,9 @@ robots
                             si (flores > maxFlores)
                               maxFlores := flores
                               maxFloresId := id
-    {Logica de ganadores}
+                              
+    {Etapa 3: Aviso a ganadores y perdedores para que realizen las tareas correspondientes}
+    {corredores}
     si (maxPapelesId = 1)
       EnviarMensaje(V, corredorVerde)
       EnviarMensaje(F, corredorAmarillo)
@@ -326,7 +328,7 @@ robots
           EnviarMensaje(F, corredorAmarillo)
           EnviarMensaje(F, corredorRosa)
           EnviarMensaje(V, corredorNegro)
-
+    {escaladores}
     si (maxFloresId = 5)
       EnviarMensaje(V, escaladorVerde)
       EnviarMensaje(F, escaladorAmarillo)
