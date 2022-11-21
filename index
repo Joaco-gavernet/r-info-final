@@ -81,7 +81,7 @@ procesos
   fin
 
   
-  proceso realizarEscalon(ES flores: numero)
+  proceso realizarEscalon(ES flores: numero; ES avUlt: numero; ES caUlt: numero)
   variables
     alto, ancho: numero
   comenzar
@@ -101,7 +101,8 @@ procesos
       BloquearEsquina(PosAv + 1, PosCa)
       mover
       LiberarEsquina(PosAv - 1, PosCa)
-      
+    avUlt:= PosAv
+    caUlt:= PosCa
     izquierda
   fin
   
@@ -191,7 +192,7 @@ robots
   
   robot rEscalador 
   variables
-    id, ancho, flores,caInicial,avInicial: numero
+    id, ancho, flores,caInicial,avInicial,avUlt,caUlt: numero
     ganador,habilitado: boolean
   comenzar 
     avInicial := PosAv
@@ -211,8 +212,8 @@ robots
           RecibirMensaje(habilitado, corredorNegro)     
     {Recorrido propio de escaladores}
     repetir 5
-      
-      realizarEscalon(flores)
+      realizarEscalon(flores,avUlt,caUlt)
+    LiberarEsquina(avUlt,caUlt) {Liberamos ultima esquina de cada escalador}
        
     Pos(avInicial,caInicial)
     
@@ -326,19 +327,19 @@ robots
           EnviarMensaje(F, corredorRosa)
           EnviarMensaje(V, corredorNegro)
 
-    si (maxFloresId = 1)
+    si (maxFloresId = 5)
       EnviarMensaje(V, escaladorVerde)
       EnviarMensaje(F, escaladorAmarillo)
       EnviarMensaje(F, escaladorRosa)
       EnviarMensaje(F, escaladorNegro)
     sino
-      si (maxFloresId = 2)
+      si (maxFloresId = 6)
         EnviarMensaje(F, escaladorVerde)
         EnviarMensaje(V, escaladorAmarillo)
         EnviarMensaje(F, escaladorRosa)
         EnviarMensaje(F, escaladorNegro)
       sino
-        si (maxFloresId = 3)
+        si (maxFloresId = 7)
           EnviarMensaje(F, escaladorVerde)
           EnviarMensaje(F, escaladorAmarillo)
           EnviarMensaje(V, escaladorRosa)
@@ -409,4 +410,5 @@ comenzar
   Iniciar(escaladorNegro, 20, 51)
 
 fin
+
 
