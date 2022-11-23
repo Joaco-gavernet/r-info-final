@@ -18,7 +18,7 @@ procesos
       LiberarEsquina(PosAv - 1, PosCa)
     avUlt:= PosAv
     caUlt:= PosCa
-    Informar('Avenida', PosAv)
+    Informar('Avenida', avUlt - 1) {Informamos la ultima esquina donde pudo depositar}
     Pos(avInicial, caInicial)
     LiberarEsquina(avUlt, caUlt)
   fin
@@ -52,7 +52,17 @@ procesos
       derecha
   fin
   
-
+  proceso realizarSalto(ES papeles: numero;ES corteWhile: boolean)
+  variables
+    alto: numero
+  comenzar
+    juntarPapeles(papeles)
+    Random(alto, 1, 5)
+    si ((PosCa + alto) < 49)
+      Pos(PosAv, PosCa + alto)
+    sino
+      corteWhile:= F
+  fin
   
   proceso realizarEscalon(ES flores: numero; ES avUlt: numero; ES caUlt: numero)
   variables
@@ -78,6 +88,8 @@ procesos
     caUlt:= PosCa
     izquierda
   fin
+  
+  
   
   proceso juntarFlores(ES flores: numero)
   comenzar
@@ -124,14 +136,9 @@ robots
     caInicial:= PosCa
     corteWhile:= V
     
-    mientras ((PosCa < 50) & (corteWhile))
-      juntarPapeles(papeles)
-      Random(alto, 1, 5)
-      si ((PosCa + alto) < 50)
-        Pos(PosAv, PosCa + alto)
-      sino
-        corteWhile:= F
-    Pos(avInicial, caInicial) {solucion para que no se choquen en la calle 50}
+    mientras ((PosCa < 49) & (corteWhile))
+      realizarSalto(papeles, corteWhile)
+    Pos(avInicial, caInicial) 
     
     
     {Etapa 2: Pasaje de postas por parte de los corredores para cada uno de sus analogos y envio de papeles juntados al juez}
@@ -369,6 +376,7 @@ comenzar
   AsignarArea(corredorRosa, AreaDeposito)
   AsignarArea(corredorNegro, AreaDeposito)
 
+
   AsignarArea(escaladorVerde, AreaDeposito)
   AsignarArea(escaladorAmarillo, AreaDeposito)
   AsignarArea(escaladorRosa, AreaDeposito)
@@ -388,5 +396,3 @@ comenzar
   Iniciar(escaladorNegro, 20, 51)
 
 fin
-
-
