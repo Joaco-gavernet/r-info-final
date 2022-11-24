@@ -65,6 +65,21 @@ procesos
       Informar('Avenida',1)
   fin
   
+  proceso depositarGanador(ES cantidad: numero; E avInicial: numero; E caInicial: numero)
+  comenzar
+    BloquearEsquina(100, 1)
+    Pos(100, 1)
+    mientras (cantidad > 0)
+      si (caInicial = 1) {Caso corredores}
+        depositarPapel
+      sino {Caso escaladores: Calle 51}
+        depositarFlor
+      cantidad:= cantidad - 1    
+    Pos(avInicial, caInicial)
+    LiberarEsquina(100, 1)
+  fin
+  
+  
   
   proceso juntarFlores(ES flores: numero)
   comenzar
@@ -138,13 +153,7 @@ robots
     {Etapa 3: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
-      BloquearEsquina(100, 1)
-      Pos(100, 1)
-      mientras (papeles > 0)
-        depositarPapel
-        papeles:= papeles - 1
-      Pos(avInicial, caInicial)
-      LiberarEsquina(100, 1) 
+      depositarGanador(papeles, avInicial, caInicial)
     sino
       depositarPerdedor(papeles, avInicial, caInicial)
   fin
@@ -186,14 +195,7 @@ robots
     {Etapa 4: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
     si (ganador)
-      BloquearEsquina(100, 1)
-      Pos(100, 1)
-      mientras (flores > 0)
-        depositarFlor
-        flores:= flores - 1
-      Pos(avInicial, caInicial)
-      LiberarEsquina(100, 1)
-      
+      depositarGanador(flores, avInicial, caInicial)
     sino
       depositarPerdedor(flores, avInicial, caInicial)
      
