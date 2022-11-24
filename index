@@ -2,46 +2,34 @@ programa ejercicio2
 
 procesos
   
-  proceso depositarFloresPerdedor(ES flores: numero; E avInicial: numero; E caInicial: numero)
+  proceso depositarPerdedor(ES cantidad: numero; E avInicial: numero; E caInicial: numero)
   variables
     avUlt,caUlt: numero
   comenzar
-    BloquearEsquina(1, 50)
-    Pos(1, 50)
-    derecha
-    
-    mientras ((flores > 0) & (PosAv < 100))
-      BloquearEsquina(PosAv + 1, PosCa)
-      depositarFlor
-      flores:= flores - 1
-      mover
-      LiberarEsquina(PosAv - 1, PosCa)
-    avUlt:= PosAv
-    caUlt:= PosCa
-    Informar('Avenida', avUlt - 1) {Informamos la ultima esquina donde pudo depositar}
-    Pos(avInicial, caInicial)
-    LiberarEsquina(avUlt, caUlt)
-  fin
-  
-  proceso depositarPapelesPerdedor(ES papeles: numero; E avInicial: numero; E caInicial: numero)
-  variables
-    avUlt,caUlt: numero
-  comenzar
-    BloquearEsquina(1, 50)
-    Pos(1, 50)
-    derecha
-    
-    mientras ((papeles > 0) & (PosAv < 100))
-      BloquearEsquina(PosAv + 1, PosCa)
-      depositarPapel
-      papeles:= papeles - 1
-      mover
-      LiberarEsquina(PosAv - 1, PosCa)
-    avUlt:= PosAv
-    caUlt:= PosCa
-    Informar('Avenida',PosAv)
-    Pos(avInicial, caInicial)
-    LiberarEsquina(avUlt, caUlt)
+    si (cantidad <> 0)
+      BloquearEsquina(1, 50)
+      Pos(1, 50)
+      derecha
+
+      mientras ((cantidad > 0) & (PosAv < 100))
+        BloquearEsquina(PosAv + 1, PosCa)
+        si (caInicial = 1) {Caso corredores}
+          depositarPapel
+        sino {Caso escaladores: Calle 51}
+          depositarFlor
+        cantidad:= cantidad - 1
+        mover
+        LiberarEsquina(PosAv - 1, PosCa)
+      avUlt:= PosAv
+      caUlt:= PosCa
+ 
+      Informar('Avenida', avUlt - 1)  {Informamos la ultima esquina donde pudo depositar}
+      
+      Pos(avInicial, caInicial)
+      LiberarEsquina(avUlt, caUlt)
+      
+    sino {Caso en el que no recolecta elementos en su recorrido}
+      Informar('Avenida',1)
   fin
   
 
@@ -105,6 +93,8 @@ procesos
       papeles:= papeles + 1
   fin
   
+ 
+  
 
 
 areas
@@ -127,7 +117,7 @@ areas
 robots
   robot rCorredor 
   variables
-    id, papeles, alto, avInicial, caInicial: numero
+    id, papeles, avInicial, caInicial: numero
     ganador, corteWhile: boolean
   comenzar
     {Etapa 1: Recepcion de identificadores y recorrido propio de los corredores}
@@ -168,7 +158,7 @@ robots
       Pos(avInicial, caInicial)
       LiberarEsquina(100, 1) 
     sino
-      depositarPapelesPerdedor(papeles, avInicial, caInicial)
+      depositarPerdedor(papeles, avInicial, caInicial)
   fin
   
   robot rEscalador 
@@ -216,7 +206,7 @@ robots
       LiberarEsquina(100, 1)
       
     sino
-      depositarFloresPerdedor(flores, avInicial, caInicial)
+      depositarPerdedor(flores, avInicial, caInicial)
      
   fin
   
@@ -268,24 +258,24 @@ robots
                 si (flores > maxFlores)
                   maxFlores := flores
                   maxFloresId := id
+              sino
+                si (id = 6)
+                  RecibirMensaje(flores, escaladorAmarillo)
+                  si (flores > maxFlores)
+                    maxFlores := flores
+                    maxFloresId := id
                 sino
-                  si (id = 6)
-                    RecibirMensaje(flores, escaladorAmarillo)
+                  si (id = 7)
+                    RecibirMensaje(flores, escaladorRosa)
                     si (flores > maxFlores)
                       maxFlores := flores
                       maxFloresId := id
-                    sino
-                      si (id = 7)
-                        RecibirMensaje(flores, escaladorRosa)
-                        si (flores > maxFlores)
-                          maxFlores := flores
-                          maxFloresId := id
-                        sino
-                          si (id = 8)
-                            RecibirMensaje(flores, escaladorNegro)
-                            si (flores > maxFlores)
-                              maxFlores := flores
-                              maxFloresId := id
+                  sino
+                    si (id = 8)
+                      RecibirMensaje(flores, escaladorNegro)
+                      si (flores > maxFlores)
+                        maxFlores := flores
+                        maxFloresId := id
                               
     {Etapa 3: Aviso a ganadores y perdedores para que realizen las tareas correspondientes}
     {corredores}
