@@ -1,45 +1,5 @@
 programa ejercicio2
-
 procesos
-  
-  proceso depositarPerdedor(ES cantidad: numero; E avInicial: numero; E caInicial: numero)
-  variables
-    avUlt,caUlt: numero
-  comenzar
-    si (cantidad <> 0)
-      BloquearEsquina(1, 50)
-      Pos(1, 50)
-      derecha
-
-      mientras ((cantidad > 0) & (PosAv < 100))
-        BloquearEsquina(PosAv + 1, PosCa)
-        si (caInicial = 1) {Caso corredores}
-          depositarPapel
-        sino {Caso escaladores: Calle 51}
-          depositarFlor
-        cantidad:= cantidad - 1
-        mover
-        LiberarEsquina(PosAv - 1, PosCa)
-      avUlt:= PosAv
-      caUlt:= PosCa
- 
-      Informar('Avenida', avUlt - 1)  {Informamos la ultima esquina donde pudo depositar}
-      
-      Pos(avInicial, caInicial)
-      LiberarEsquina(avUlt, caUlt)
-      
-    sino {Caso en el que no recolecta elementos en su recorrido}
-      Informar('Avenida',1)
-  fin
-  
-
-
-  proceso izquierda
-  comenzar
-    repetir 3
-      derecha
-  fin
-  
   proceso realizarSalto(ES papeles: numero;ES corteWhile: boolean)
   variables
     alto: numero
@@ -52,31 +12,58 @@ procesos
       corteWhile:= F
   fin
   
+  
   proceso realizarEscalon(ES flores: numero; ES avUlt: numero; ES caUlt: numero)
   variables
     alto, ancho: numero
   comenzar
     alto:= 3
-
     repetir alto
       juntarFlores(flores)
       BloquearEsquina(PosAv, PosCa + 1)
       mover
-      LiberarEsquina(PosAv, PosCa - 1)
-    
+      si (PosCa > 50) {Solo liberamos esquinas bloqueadas}
+        LiberarEsquina(PosAv, PosCa - 1)
     derecha
-    
     Random(ancho,3,5)
     repetir ancho
       juntarFlores(flores)
       BloquearEsquina(PosAv + 1, PosCa)
       mover
       LiberarEsquina(PosAv - 1, PosCa)
+      
     avUlt:= PosAv
     caUlt:= PosCa
     izquierda
   fin
   
+  
+  proceso depositarPerdedor(ES cantidad: numero; E avInicial: numero; E caInicial: numero)
+  variables
+    avUlt,caUlt: numero
+  comenzar
+    si (cantidad > 0)
+      BloquearEsquina(1, 50)
+      Pos(1, 50)
+      derecha
+      mientras ((cantidad > 0) & (PosAv < 100))
+        BloquearEsquina(PosAv + 1, PosCa)
+        si (caInicial = 1) {Caso corredores}
+          depositarPapel
+        sino {Caso escaladores: Calle 51}
+          depositarFlor
+        cantidad:= cantidad - 1
+        mover
+        LiberarEsquina(PosAv - 1, PosCa)
+        
+      avUlt:= PosAv
+      caUlt:= PosCa
+      Informar('Avenida', avUlt - 1)  {Informamos la ultima esquina donde pudo depositar} 
+      Pos(avInicial, caInicial)
+      LiberarEsquina(avUlt, caUlt)  
+    sino {Caso en el que no recolecta elementos en su recorrido}
+      Informar('Avenida',1)
+  fin
   
   
   proceso juntarFlores(ES flores: numero)
@@ -86,6 +73,7 @@ procesos
       flores:= flores + 1
   fin
   
+  
   proceso juntarPapeles(ES papeles: numero)
   comenzar
     mientras(HayPapelEnLaEsquina)
@@ -93,8 +81,12 @@ procesos
       papeles:= papeles + 1
   fin
   
- 
   
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
 
 
 areas
@@ -125,13 +117,11 @@ robots
     avInicial:= PosAv
     caInicial:= PosCa
     corteWhile:= V
-    
     mientras ((PosCa < 49) & (corteWhile))
       realizarSalto(papeles, corteWhile)
     Pos(avInicial, caInicial) 
     
-    
-    {Etapa 2: Pasaje de postas por parte de los corredores para cada uno de sus analogos y envio de papeles juntados al juez}
+    {Etapa 2: Pasaje de postas a escaladores y papeles a juez}
     si (id = 1)
       EnviarMensaje(V, escaladorVerde)
     sino
@@ -141,11 +131,9 @@ robots
         si (id = 3)
           EnviarMensaje(V, escaladorRosa)
         sino
-          EnviarMensaje(V, escaladorNegro)
-          
+          EnviarMensaje(V, escaladorNegro) 
     EnviarMensaje(id, juez)
     EnviarMensaje(papeles, juez)
-    
     
     {Etapa 3: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
@@ -160,6 +148,7 @@ robots
     sino
       depositarPerdedor(papeles, avInicial, caInicial)
   fin
+  
   
   robot rEscalador 
   variables
