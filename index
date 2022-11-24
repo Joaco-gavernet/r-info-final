@@ -1,4 +1,4 @@
-programa ejercicio2
+programa PromoGrupo38-Tema4
 procesos
   proceso realizarSalto(ES papeles: numero;ES corteWhile: boolean)
   variables
