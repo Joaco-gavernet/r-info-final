@@ -4,9 +4,9 @@ procesos
   variables
     alto: numero
   comenzar
-    juntarPapeles(papeles)
-    Random(alto, 1, 5)
-    si ((PosCa + alto) < 49)
+    juntarPapeles(papeles) 
+    Random(alto, 1, 5) 
+    si ((PosCa + alto) < 49) {Para que no salga de su area}
       Pos(PosAv, PosCa + alto)
     sino
       corteWhile:= F
@@ -69,7 +69,7 @@ procesos
   comenzar
     BloquearEsquina(100, 1)
     Pos(100, 1)
-    mientras (cantidad > 0)
+    mientras (cantidad > 0) {cantidad de flores o papeles}
       si (caInicial = 1) {Caso corredores}
         depositarPapel
       sino {Caso escaladores: Calle 51}
@@ -132,7 +132,7 @@ robots
     avInicial:= PosAv
     caInicial:= PosCa
     corteWhile:= V
-    mientras ((PosCa < 49) & (corteWhile))
+    mientras (corteWhile)
       realizarSalto(papeles, corteWhile)
     Pos(avInicial, caInicial) 
     
