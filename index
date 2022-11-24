@@ -65,6 +65,7 @@ procesos
       Informar('Avenida',1)
   fin
   
+  
   proceso depositarGanador(ES cantidad: numero; E avInicial: numero; E caInicial: numero)
   comenzar
     BloquearEsquina(100, 1)
@@ -78,7 +79,6 @@ procesos
     Pos(avInicial, caInicial)
     LiberarEsquina(100, 1)
   fin
-  
   
   
   proceso juntarFlores(ES flores: numero)
@@ -179,19 +179,15 @@ robots
         sino
           RecibirMensaje(habilitado, corredorNegro)   
           
-    
     {Etapa 2: Recorrido propio de los escaladores}
     repetir 5
       realizarEscalon(flores, avUlt, caUlt)
     Pos(avInicial, caInicial)
     LiberarEsquina(avUlt, caUlt) {Liberamos ultima esquina de cada escalador} 
     
-    
-    
     {Etapa 3: Envio de flores juntadas al juez}
     EnviarMensaje(id, juez)
     EnviarMensaje(flores, juez)
-    
     
     {Etapa 4: Recibe y realiza su respectiva tarea, de acuerdo a si gano o perdio}
     RecibirMensaje(ganador, juez)
@@ -199,7 +195,6 @@ robots
       depositarGanador(flores, avInicial, caInicial)
     sino
       depositarPerdedor(flores, avInicial, caInicial)
-     
   fin
   
   robot rJuez
@@ -231,7 +226,6 @@ robots
           si (papeles > maxPapeles) 
             maxPapeles:= papeles
             maxPapelesId:= id
-
         sino
           si (id = 3)
             RecibirMensaje(papeles, corredorRosa)
@@ -358,13 +352,12 @@ comenzar
   AsignarArea(corredorRosa, AreaDeposito)
   AsignarArea(corredorNegro, AreaDeposito)
 
-
   AsignarArea(escaladorVerde, AreaDeposito)
   AsignarArea(escaladorAmarillo, AreaDeposito)
   AsignarArea(escaladorRosa, AreaDeposito)
   AsignarArea(escaladorNegro, AreaDeposito)
 
-  
+
   Iniciar(juez, 1, 1) 
   
   Iniciar(corredorVerde, 5, 1)
