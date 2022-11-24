@@ -183,8 +183,9 @@ robots
     {Etapa 2: Recorrido propio de los escaladores}
     repetir 5
       realizarEscalon(flores, avUlt, caUlt)
-    LiberarEsquina(avUlt, caUlt) {Liberamos ultima esquina de cada escalador} 
     Pos(avInicial, caInicial)
+    LiberarEsquina(avUlt, caUlt) {Liberamos ultima esquina de cada escalador} 
+    
     
     
     {Etapa 3: Envio de flores juntadas al juez}
